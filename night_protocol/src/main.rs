@@ -1,4 +1,5 @@
-#[macro_use] extern crate rocket;
+#[macro_use]
+extern crate rocket;
 
 #[get("/")]
 fn index() -> String {
@@ -7,6 +8,5 @@ fn index() -> String {
 
 #[launch]
 fn rocket() -> _ {
-    rocket::build()
-        .mount("/", routes![index])
+    rocket::build().mount("/", routes![index])
 }

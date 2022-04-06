@@ -3,12 +3,14 @@
         "folder": "client",
         "run": "npm run dev",
         "test": "npm run test",
-        "install": "npm i"
+        "install": "npm i",
+        "lint": "npm run lint"
     },
 
     "night_protocol": {
         "folder": "night_protocol",
         "run": "cargo watch -x run",
-        "test": "cargo test"
+        "test": "cargo test",
+        "format": "cargo fmt"
     }
 }
