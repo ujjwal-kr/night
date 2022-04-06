@@ -1,1 +1,13 @@
-{}
+{
+    "client": {
+        "folder": "client",
+        "run": "npm run dev",
+        "test": "npm run test"
+    },
+
+    "night_protocol": {
+        "folder": "night_protocol",
+        "run": "cargo run",
+        "test": "cargo test"
+    }
+}
