@@ -7,7 +7,7 @@
 
     "night_protocol": {
         "folder": "night_protocol",
-        "run": "cargo run",
+        "run": "cargo watch -x run",
         "test": "cargo test"
     }
 }
