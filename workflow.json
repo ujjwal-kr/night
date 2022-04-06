@@ -2,7 +2,8 @@
     "client": {
         "folder": "client",
         "run": "npm run dev",
-        "test": "npm run test"
+        "test": "npm run test",
+        "install": "npm i"
     },
 
     "night_protocol": {
