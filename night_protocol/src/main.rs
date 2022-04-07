@@ -1,5 +1,6 @@
 #[macro_use]
 extern crate rocket;
+use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
 
 #[derive(Debug)]
@@ -7,12 +8,19 @@ struct Main {
     pub blocks: Vec<Block>,
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 struct Block {
     block_data: String,
     previous_hash: String,
-    transaction_list: Vec<String>,
+    transaction_list: Vec<Transaction>,
     block_hash: String,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+struct Transaction {
+    sender: String,
+    reciever: String,
+    amount: f64,
 }
 
 impl Main {
@@ -20,12 +28,17 @@ impl Main {
         Self {
             blocks: vec![Block::new(
                 "genesus".to_string(),
-                ["tran1".to_string()].to_vec(),
+                [Transaction {
+                    sender: "test".to_string(),
+                    reciever: "net".to_string(),
+                    amount: 500.0,
+                }]
+                .to_vec(),
             )],
         }
     }
 
-    pub fn add_block(&mut self, transactions: Vec<String>) {
+    pub fn add_block(&mut self, transactions: Vec<Transaction>) {
         let prev_block = &self.blocks[self.blocks.len() - 1];
         let new_block = Block::new(prev_block.clone().block_hash, transactions);
         self.blocks.push(new_block);
@@ -33,7 +46,7 @@ impl Main {
 }
 
 impl Block {
-    fn new(previous_hash: String, transaction_list: Vec<String>) -> Block {
+    fn new(previous_hash: String, transaction_list: Vec<Transaction>) -> Block {
         let mut hasher = Sha256::new();
         hasher.update(format!("{}--{:?}", previous_hash, transaction_list));
         let block_hash_str: String = format!("{:x}", hasher.finalize());
@@ -49,12 +62,36 @@ impl Block {
 #[launch]
 fn rocket() -> _ {
     let mut blocks = Main::new();
-    blocks.add_block(["tran2".to_string(), "tran3".to_string()].to_vec());
-    blocks.add_block(["tran4".to_string(), "tran5".to_string()].to_vec());
-    blocks.add_block(["tran6".to_string(), "tran7".to_string()].to_vec());
-    
+
+    blocks.add_block(
+        [Transaction {
+            sender: "test".to_string(),
+            reciever: "net".to_string(),
+            amount: 505.0,
+        }]
+        .to_vec(),
+    );
+
+    blocks.add_block(
+        [Transaction {
+            sender: "testtwo".to_string(),
+            reciever: "net".to_string(),
+            amount: 500.0,
+        }]
+        .to_vec(),
+    );
+
+    blocks.add_block(
+        [Transaction {
+            sender: "testthree".to_string(),
+            reciever: "net".to_string(),
+            amount: 500.0,
+        }]
+        .to_vec(),
+    );
+
     for block in blocks.blocks {
-        println!("{:?} && {:?}", block.block_hash, block.previous_hash);
+        println!("{:?} \n", block);
     }
 
     //  server

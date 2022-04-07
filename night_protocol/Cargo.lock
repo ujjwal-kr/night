@@ -617,6 +617,7 @@ name = "night_protocol"
 version = "0.1.0"
 dependencies = [
  "rocket",
+ "serde",
  "sha2",
 ]
 
