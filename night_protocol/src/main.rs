@@ -2,7 +2,7 @@
 extern crate rocket;
 use sha2::{Digest, Sha256};
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 struct Block {
     block_data: String,
     previous_hash: String,
@@ -13,7 +13,7 @@ struct Block {
 impl Block {
     fn new(previous_hash: String, transaction_list: Vec<String>) -> Block {
         let mut hasher = Sha256::new();
-        hasher.update(format!("{}+{:?}", previous_hash, transaction_list));
+        hasher.update(format!("{}--{:?}", previous_hash, transaction_list));
         let block_hash_str: String = format!("{:x}", hasher.finalize());
         Block {
             block_data: format!("{}+{:?}", previous_hash, transaction_list),
@@ -31,16 +31,21 @@ fn rocket() -> _ {
         ["trans 1".to_string(), "trans 2".to_string()].to_vec(),
     );
 
-    let block1 = Block::new(
-        genesus.block_hash.clone(),
-        ["trans 3".to_string(), "trans 4".to_string()].to_vec(),
-    );
+    let mut blocks: Vec<Block> = vec![];
+    blocks.push(genesus);
 
-    let block2 = Block::new(block1.block_hash.clone(), ["trans 5".to_string()].to_vec());
+    add_block(["trans 3".to_string(), "trans 4".to_string()].to_vec(), &mut blocks);
+    add_block(["trans 5".to_string(), "trans 6".to_string()].to_vec(), &mut blocks);
+    add_block(["trans 7".to_string(), "trans 8".to_string()].to_vec(), &mut blocks);
 
-    println!("{:?} \n {:?} \n {:?}", genesus, block1, block2);
-
+    //  server
     rocket::build().mount("/", routes![index])
+}
+
+fn add_block(transactions: Vec<String>, blocks: &mut Vec<Block>) {
+    let prev_block = &blocks[blocks.len() -1];
+    let new_block = Block::new(prev_block.clone().block_hash, transactions);
+    blocks.push(new_block);
 }
 
 #[get("/")]
