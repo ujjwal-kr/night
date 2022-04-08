@@ -10,9 +10,9 @@ struct Blockchain {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 struct Block {
-    block_data: String,
+    id: i64,
     previous_hash: String,
-    transaction_list: Transaction,
+    transaction: Transaction,
     block_hash: String,
 }
 
@@ -27,6 +27,7 @@ impl Blockchain {
     fn new() -> Self {
         Self {
             blocks: vec![Block::new(
+                0,
                 "genesus".to_string(),
                 Transaction {
                     sender: "test".to_string(),
@@ -39,7 +40,7 @@ impl Blockchain {
 
     pub fn add_block(&mut self, transactions: Transaction) {
         let prev_block = &self.blocks[self.blocks.len() - 1];
-        let new_block = Block::new(prev_block.clone().block_hash, transactions);
+        let new_block = Block::new(prev_block.id + 1,  prev_block.clone().block_hash, transactions);
         self.blocks.push(new_block);
     }
 
@@ -65,15 +66,15 @@ impl Blockchain {
 }
 
 impl Block {
-    fn new(previous_hash: String, transaction: Transaction) -> Block {
+    fn new(id: i64, previous_hash: String, transaction: Transaction) -> Block {
         let mut hasher = Sha256::new();
-        hasher.update(format!("{}--{:?}", previous_hash, transaction));
+        hasher.update(format!("{}-{}-{:?}", id, previous_hash, transaction));
         let block_hash_str: String = format!("{:x}", hasher.finalize());
         Block {
-            block_data: format!("{}+{:?}", previous_hash, transaction),
+            id: id,
             block_hash: block_hash_str,
             previous_hash: previous_hash,
-            transaction_list: transaction,
+            transaction: transaction,
         }
     }
 }
