@@ -12,7 +12,7 @@ struct Blockchain {
 struct Block {
     block_data: String,
     previous_hash: String,
-    transaction_list: Vec<Transaction>,
+    transaction_list: Transaction,
     block_hash: String,
 }
 
@@ -28,17 +28,16 @@ impl Blockchain {
         Self {
             blocks: vec![Block::new(
                 "genesus".to_string(),
-                [Transaction {
+                Transaction {
                     sender: "test".to_string(),
                     reciever: "net".to_string(),
                     amount: 500.0,
-                }]
-                .to_vec(),
+                },
             )],
         }
     }
 
-    pub fn add_block(&mut self, transactions: Vec<Transaction>) {
+    pub fn add_block(&mut self, transactions: Transaction) {
         let prev_block = &self.blocks[self.blocks.len() - 1];
         let new_block = Block::new(prev_block.clone().block_hash, transactions);
         self.blocks.push(new_block);
@@ -55,10 +54,10 @@ impl Blockchain {
     fn validate_chain(&self) {
         for i in 1..self.blocks.len() {
             let block = &self.blocks[i];
-            let prev_block = &self.blocks[i-1].clone();
+            let prev_block = &self.blocks[i - 1].clone();
             if self.validate_block(block, prev_block) == false {
                 println!("block bad");
-                return
+                return;
             }
         }
         println!("blocks good");
@@ -66,15 +65,15 @@ impl Blockchain {
 }
 
 impl Block {
-    fn new(previous_hash: String, transaction_list: Vec<Transaction>) -> Block {
+    fn new(previous_hash: String, transaction: Transaction) -> Block {
         let mut hasher = Sha256::new();
-        hasher.update(format!("{}--{:?}", previous_hash, transaction_list));
+        hasher.update(format!("{}--{:?}", previous_hash, transaction));
         let block_hash_str: String = format!("{:x}", hasher.finalize());
         Block {
-            block_data: format!("{}+{:?}", previous_hash, transaction_list),
+            block_data: format!("{}+{:?}", previous_hash, transaction),
             block_hash: block_hash_str,
             previous_hash: previous_hash,
-            transaction_list: transaction_list,
+            transaction_list: transaction,
         }
     }
 }
@@ -85,13 +84,11 @@ fn main() {
 
     loop {
         i = i + 1.0;
-        blocks.add_block(
-            [Transaction{
-                sender: "test".to_string(),
-                reciever: "net".to_string(),
-                amount: i * 5.0,
-            }].to_vec(),
-        );
+        blocks.add_block(Transaction {
+            sender: "test".to_string(),
+            reciever: "net".to_string(),
+            amount: i * 5.0,
+        });
         if i == 10.0 {
             break;
         }
@@ -100,7 +97,6 @@ fn main() {
     for block in &blocks.blocks {
         println!("{:?} \n", block);
     }
-
 
     blocks.validate_chain();
 
