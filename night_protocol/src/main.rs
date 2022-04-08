@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
 
 #[derive(Debug)]
-struct Main {
+struct Blockchain {
     pub blocks: Vec<Block>,
 }
 
@@ -23,7 +23,7 @@ struct Transaction {
     amount: f64,
 }
 
-impl Main {
+impl Blockchain {
     fn new() -> Self {
         Self {
             blocks: vec![Block::new(
@@ -43,6 +43,26 @@ impl Main {
         let new_block = Block::new(prev_block.clone().block_hash, transactions);
         self.blocks.push(new_block);
     }
+
+    fn validate_block(&self, block: &Block, previous_block: &Block) -> bool {
+        if previous_block.block_hash.trim() == block.previous_hash.trim() {
+            true
+        } else {
+            false
+        }
+    }
+
+    fn validate_chain(&self) {
+        for i in 1..self.blocks.len() {
+            let block = &self.blocks[i];
+            let prev_block = &self.blocks[i-1].clone();
+            if self.validate_block(block, prev_block) == false {
+                println!("block bad");
+                return
+            }
+        }
+        println!("blocks good");
+    }
 }
 
 impl Block {
@@ -59,43 +79,33 @@ impl Block {
     }
 }
 
-#[launch]
-fn rocket() -> _ {
-    let mut blocks = Main::new();
+fn main() {
+    let mut blocks = Blockchain::new();
+    let mut i = 0.0f64;
 
-    blocks.add_block(
-        [Transaction {
-            sender: "test".to_string(),
-            reciever: "net".to_string(),
-            amount: 505.0,
-        }]
-        .to_vec(),
-    );
+    loop {
+        i = i + 1.0;
+        blocks.add_block(
+            [Transaction{
+                sender: "test".to_string(),
+                reciever: "net".to_string(),
+                amount: i * 5.0,
+            }].to_vec(),
+        );
+        if i == 10.0 {
+            break;
+        }
+    }
 
-    blocks.add_block(
-        [Transaction {
-            sender: "testtwo".to_string(),
-            reciever: "net".to_string(),
-            amount: 500.0,
-        }]
-        .to_vec(),
-    );
-
-    blocks.add_block(
-        [Transaction {
-            sender: "testthree".to_string(),
-            reciever: "net".to_string(),
-            amount: 500.0,
-        }]
-        .to_vec(),
-    );
-
-    for block in blocks.blocks {
+    for block in &blocks.blocks {
         println!("{:?} \n", block);
     }
 
+
+    blocks.validate_chain();
+
     //  server
-    rocket::build().mount("/", routes![index])
+    // rocket::build().mount("/", routes![index])
 }
 
 #[get("/")]
