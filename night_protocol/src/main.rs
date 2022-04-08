@@ -40,7 +40,11 @@ impl Blockchain {
 
     pub fn add_block(&mut self, transactions: Transaction) {
         let prev_block = &self.blocks[self.blocks.len() - 1];
-        let new_block = Block::new(prev_block.id + 1,  prev_block.clone().block_hash, transactions);
+        let new_block = Block::new(
+            prev_block.id + 1,
+            prev_block.clone().block_hash,
+            transactions,
+        );
         self.blocks.push(new_block);
     }
 
@@ -63,6 +67,25 @@ impl Blockchain {
         }
         println!("blocks good");
     }
+
+    fn find_block_by_hash(&self, hash: String) -> Block {
+        for block in self.blocks.clone() {
+            if block.block_hash.trim() == hash.trim() {
+                return block;
+            }
+        }
+
+        Block {
+            id: 0,
+            block_hash: "null".to_string(),
+            previous_hash: "null".to_string(),
+            transaction: Transaction {
+                sender: "null".to_string(),
+                reciever: "null".to_string(),
+                amount: 0.00,
+            },
+        }
+    }
 }
 
 impl Block {
@@ -83,6 +106,8 @@ fn main() {
     let mut blocks = Blockchain::new();
     let mut i = 0.0f64;
 
+    // Add some blocks for testing
+
     loop {
         i = i + 1.0;
         blocks.add_block(Transaction {
@@ -95,11 +120,23 @@ fn main() {
         }
     }
 
+    // Example Actions
+
     for block in &blocks.blocks {
         println!("{:?} \n", block);
     }
 
+    // print all the blocks
+
     blocks.validate_chain();
+
+    // Finding a block by known hash
+
+    let my_block = blocks.find_block_by_hash(
+        "55f2610a693e8babf9f828a6f68af6e8567e601bf32153550dc811d757ff8c91".to_string(),
+    );
+
+    println!("{:?}", my_block);
 
     //  server
     // rocket::build().mount("/", routes![index])
