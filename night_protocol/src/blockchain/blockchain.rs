@@ -63,7 +63,7 @@ impl Blockchain {
                 return;
             }
         }
-        println!("blocks good");
+        println!("Validated All Blocks");
     }
 
     pub fn find_block_by_hash(&self, hash: String) -> Block {

@@ -1,9 +1,13 @@
 #[macro_use]
 extern crate rocket;
+use rocket::response::content::Json;
+use rocket::State;
+
 mod blockchain;
 use blockchain::blockchain::*;
 
-fn main() {
+#[launch]
+fn rocket() -> _ {
     let mut blocks = Blockchain::new();
     let mut i = 0.0f64;
 
@@ -16,7 +20,7 @@ fn main() {
             reciever: "net".to_string(),
             amount: i * 5.0,
         });
-        if i == 3.0 {
+        if i == 5.0 {
             break;
         }
     }
@@ -32,10 +36,6 @@ fn main() {
         );
     }
 
-    // validate the blockchain
-
-    blocks.validate_chain();
-
     // Finding a block by known hash
 
     let my_block = blocks.find_block_by_hash(
@@ -45,10 +45,24 @@ fn main() {
     println!("{:?}", my_block);
 
     //  server
-    // rocket::build().mount("/", routes![index])
+    rocket::build().manage(blocks)
+        .mount("/", routes![index])
+        .mount("/blocks", routes![get_block])
 }
 
+// Get all blocks
 #[get("/")]
-fn index() -> String {
-    "Hello, world!".to_string()
+fn index(blocks: &State<Blockchain>) -> Json<String> {
+    let serialized = serde_json::to_string(&blocks.blocks).unwrap();
+    Json(serialized)
 }
+
+// Get single block
+#[get("/<hash>")]
+fn get_block(hash: String, blocks: &State<Blockchain>) ->  Json<String> {
+    let block: Block = blocks.find_block_by_hash(hash);
+    let serialized = serde_json::to_string(&block).unwrap();
+    Json(serialized)
+}
+
+// Transaction
