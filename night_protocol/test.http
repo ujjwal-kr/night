@@ -8,7 +8,7 @@ GET http://localhost:8000/blocks/c5cb8c2079e82ae401e862f1e90914c0fd215a67aad9704
 
 ###
 
-POST https://example.com HTTP/1.1
+POST http://localhost:8000/transaction
 content-type: application/json
 
 {
