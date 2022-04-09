@@ -6,6 +6,8 @@ GET http://localhost:8000/blocks/c5cb8c2079e82ae401e862f1e90914c0fd215a67aad9704
 
 ###
 
+GET http://localhost:8000/master/ea678fa3238eb37fdf93a4da83bfba13969ff79e8e563925242813d9635dd94b
+
 ###
 
 POST http://localhost:8000/transaction
