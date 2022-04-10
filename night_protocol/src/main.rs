@@ -28,7 +28,7 @@ fn rocket() -> _ {
             reciever: "net".to_string(),
             amount: i * 5.0,
         });
-        if i == 30.0 {
+        if i == 400.0 {
             break;
         }
     }
