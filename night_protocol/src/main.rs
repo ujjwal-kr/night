@@ -5,22 +5,33 @@ use rocket::State;
 
 mod blockchain;
 use blockchain::blockchain::*;
+use blockchain::master_chain::*;
 
 #[launch]
 fn rocket() -> _ {
     let mut blocks = Blockchain::new();
+    let mut master_blocks = Master::new();
+
     let mut i = 0.0f64;
 
     // Add some blocks for testing
 
     loop {
         i = i + 1.0;
+        if blocks.blocks.len() == 20 {
+            master_blocks.validate_chain();
+            blocks.validate_chain();
+            master_blocks.add_master_block(blocks.blocks);
+            blocks.blocks = vec![];
+            blocks.genesus();
+        }
+
         blocks.add_block(Transaction {
             sender: "test".to_string(),
             reciever: "net".to_string(),
             amount: i * 5.0,
         });
-        if i == 5.0 {
+        if i == 100.0 {
             break;
         }
     }
@@ -36,18 +47,23 @@ fn rocket() -> _ {
         );
     }
 
-    // Finding a block by known hash
+    // print the master blockchain
 
-    let my_block = blocks.find_block_by_hash(
-        "aa89390f927d1c05d70252caf9963e2c82c1fe153c906afe9fb51f0e3cd8c203".to_string(),
-    );
-
-    println!("{:?}", my_block);
+    for master_block in &master_blocks.master_blocks {
+        print!(
+            "id: {}\n hash: {},\n previous_hash: {}, \n Blocks: {:?}\n\n",
+            master_block.id,
+            master_block.block_hash,
+            master_block.previous_hash,
+            master_block.block_data
+        )
+    }
 
     //  server
-    rocket::build().manage(blocks)
-        .mount("/", routes![index])
-        .mount("/blocks", routes![get_block])
+    rocket::build()
+        .manage(blocks)
+        .manage(master_blocks)
+        .mount("/transactions", routes![index, get_transaction])
 }
 
 // Get all blocks
@@ -57,12 +73,25 @@ fn index(blocks: &State<Blockchain>) -> Json<String> {
     Json(serialized)
 }
 
-// Get single block
+// Find Transaction
 #[get("/<hash>")]
-fn get_block(hash: String, blocks: &State<Blockchain>) ->  Json<String> {
-    let block: Block = blocks.find_block_by_hash(hash);
+fn get_transaction(hash: String, master_blocks: &State<Master>, blocks: &State<Blockchain>) -> Json<String> {
+    let block: Block;
+    let possible_master_block = master_blocks.find_block_by_hash(hash.clone());
+    let possible_block = blocks.find_block_by_hash(hash);
+
+    if possible_block.id != 0 {
+        block = possible_block;
+        let serialized = serde_json::to_string(&block).unwrap();
+        return Json(serialized);
+    } else if possible_master_block.id != 0 {
+        block = possible_master_block;
+        let serialized = serde_json::to_string(&block).unwrap();
+        return Json(serialized);
+    } else {
+        block = possible_block;
+    }
+
     let serialized = serde_json::to_string(&block).unwrap();
     Json(serialized)
 }
-
-// Transaction

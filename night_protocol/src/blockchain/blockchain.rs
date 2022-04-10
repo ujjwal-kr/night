@@ -36,6 +36,16 @@ impl Blockchain {
         }
     }
 
+    pub fn genesus(&mut self) {
+        let genesus = Block::new(0, "genesus".to_string(), Transaction {
+            sender: "test".to_string(),
+            reciever: "net".to_string(),
+            amount: 500.0,
+        });
+
+        self.blocks.push(genesus);
+    }
+
     pub fn add_block(&mut self, transactions: Transaction) {
         let prev_block = &self.blocks[self.blocks.len() - 1];
         let new_block = Block::new(
