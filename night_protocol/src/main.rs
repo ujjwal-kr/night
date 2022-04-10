@@ -63,27 +63,24 @@ fn rocket() -> _ {
         .mount("/transactions", routes![index, get_transaction])
 }
 
-// Get all blocks TODO: make it based on the master id for pagination kinda thingy
-#[get("/")]
-fn index(blocks: &State<Blockchain>, master_blocks: &State<Master>) -> Json<String> {
-    let mut final_blocks: Vec<Block> = vec![];
-    for block in &blocks.blocks {
-        final_blocks.push(block.clone());
+// Get all blocks pagination mode
+#[get("/?<page>")]
+fn index(page: i64, blocks: &State<Blockchain>, master_blocks: &State<Master>) -> Json<String> {
+    if page == 0 {
+        let serialized = serde_json::to_string(&blocks.blocks).unwrap();
+        return Json(serialized);
     }
-
-    for master_block in &master_blocks.master_blocks {
-        for block in &master_block.block_data {
-            final_blocks.push(block.clone())
-        }
-    }
-
-    let serialized = serde_json::to_string(&final_blocks).unwrap();
+    let serialized = serde_json::to_string(&master_blocks.find_blocks_by_master_id(page)).unwrap();
     Json(serialized)
 }
 
 // Find Transaction
 #[get("/<hash>")]
-fn get_transaction(hash: String, master_blocks: &State<Master>, blocks: &State<Blockchain>) -> Json<String> {
+fn get_transaction(
+    hash: String,
+    master_blocks: &State<Master>,
+    blocks: &State<Blockchain>,
+) -> Json<String> {
     let block: Block;
     let possible_master_block = master_blocks.find_block_by_hash(hash.clone());
     let possible_block = blocks.find_block_by_hash(hash);

@@ -45,11 +45,7 @@ impl Master {
         self.master_blocks.push(new_block);
     }
 
-    pub fn validate_master_block(
-        &self,
-        block: &MasterBlock,
-        previous_block: &MasterBlock,
-    ) -> bool {
+    pub fn validate_master_block(&self, block: &MasterBlock, previous_block: &MasterBlock) -> bool {
         if previous_block.block_hash.trim() == block.previous_hash.trim() {
             true
         } else {
@@ -67,6 +63,18 @@ impl Master {
             }
         }
         println!("Validated All Master Blocks");
+    }
+
+    pub fn find_blocks_by_master_id(&self, id: i64) -> Vec<Block> {
+        let mut blocks: Vec<Block> = vec![];
+        for master_blocks in &self.master_blocks {
+            if id == master_blocks.id {
+                for block in &master_blocks.block_data {
+                    blocks.push(block.clone())
+                }
+            }
+        }
+        blocks
     }
 
     pub fn find_block_by_hash(&self, hash: String) -> Block {
