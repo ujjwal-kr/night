@@ -18,7 +18,7 @@ fn rocket() -> _ {
 
     loop {
         i = i + 1.0;
-        if blocks.blocks.len() == 30 {
+        if blocks.blocks.len() == 20 {
             master_blocks.validate_chain();
             blocks.validate_chain();
             master_blocks.add_master_block(blocks.blocks);
@@ -63,9 +63,7 @@ fn rocket() -> _ {
     rocket::build()
         .manage(blocks)
         .manage(master_blocks)
-        .mount("/", routes![index])
-        .mount("/blocks", routes![get_block])
-        .mount("/master", routes![get_master_block_block])
+        .mount("/transactions", routes![index, get_transaction])
 }
 
 // Get all blocks
@@ -75,17 +73,9 @@ fn index(blocks: &State<Blockchain>) -> Json<String> {
     Json(serialized)
 }
 
-// Get single block
-#[get("/<hash>")]
-fn get_block(hash: String, blocks: &State<Blockchain>) -> Json<String> {
-    let block: Block = blocks.find_block_by_hash(hash);
-    let serialized = serde_json::to_string(&block).unwrap();
-    Json(serialized)
-}
-
 // Find Transaction
 #[get("/<hash>")]
-fn get_master_block_block(hash: String, master_blocks: &State<Master>, blocks: &State<Blockchain>) -> Json<String> {
+fn get_transaction(hash: String, master_blocks: &State<Master>, blocks: &State<Blockchain>) -> Json<String> {
     let block: Block;
     let possible_master_block = master_blocks.find_block_by_hash(hash.clone());
     let possible_block = blocks.find_block_by_hash(hash);

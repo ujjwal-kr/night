@@ -2,11 +2,11 @@ GET http://localhost:8000
 
 ###
 
-GET http://localhost:8000/blocks/c5cb8c2079e82ae401e862f1e90914c0fd215a67aad97047b69c419d46d477a1
+GET http://localhost:8000/transactions/c5cb8c2079e82ae401e862f1e90914c0fd215a67aad97047b69c419d46d477a1
 
 ###
 
-GET http://localhost:8000/master/4b826d463b785072eac8efd87ff3272f138063b5d6f1db3968b3c320a6adc397
+GET http://localhost:8000/transactions
 
 ###
 

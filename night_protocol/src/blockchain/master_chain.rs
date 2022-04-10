@@ -3,13 +3,13 @@ use sha2::{Digest, Sha256};
 
 use super::blockchain::*;
 
-#[derive(Debug)]
+#[derive(Debug, Deserialize, Serialize)]
 pub struct Master {
-    pub master_blocks: Vec<Master_Block>,
+    pub master_blocks: Vec<MasterBlock>,
 }
 
-#[derive(Debug, Clone)]
-pub struct Master_Block {
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct MasterBlock {
     pub id: i64,
     pub previous_hash: String,
     pub block_hash: String,
@@ -19,7 +19,7 @@ pub struct Master_Block {
 impl Master {
     pub fn new() -> Self {
         Self {
-            master_blocks: vec![Master_Block::new(
+            master_blocks: vec![MasterBlock::new(
                 0,
                 "genesus".to_string(),
                 [Block {
@@ -40,14 +40,14 @@ impl Master {
     pub fn add_master_block(&mut self, block_data: Vec<Block>) {
         let prev_block = &self.master_blocks[&self.master_blocks.len() - 1];
         let new_block =
-            Master_Block::new(prev_block.id + 1, prev_block.clone().block_hash, block_data);
+            MasterBlock::new(prev_block.id + 1, prev_block.clone().block_hash, block_data);
         self.master_blocks.push(new_block);
     }
 
     pub fn validate_master_block(
         &self,
-        block: &Master_Block,
-        previous_block: &Master_Block,
+        block: &MasterBlock,
+        previous_block: &MasterBlock,
     ) -> bool {
         if previous_block.block_hash.trim() == block.previous_hash.trim() {
             true
@@ -68,14 +68,14 @@ impl Master {
         println!("Validated All Master Blocks");
     }
 
-    pub fn find_master_block_by_hash(&self, hash: String) -> Master_Block {
+    pub fn find_master_block_by_hash(&self, hash: String) -> MasterBlock {
         for block in self.master_blocks.clone() {
             if block.block_hash.trim() == hash.trim() {
                 return block;
             }
         }
 
-        Master_Block {
+        MasterBlock {
             id: 0,
             block_hash: "null".to_string(),
             previous_hash: "null".to_string(),
@@ -115,12 +115,12 @@ impl Master {
     }
 }
 
-impl Master_Block {
-    pub fn new(id: i64, previous_hash: String, block_data: Vec<Block>) -> Master_Block {
+impl MasterBlock {
+    pub fn new(id: i64, previous_hash: String, block_data: Vec<Block>) -> MasterBlock {
         let mut hasher = Sha256::new();
         hasher.update(format!("{}-{}-{:?}", id, previous_hash, block_data));
         let block_hash_str: String = format!("{:x}", hasher.finalize());
-        Master_Block {
+        MasterBlock {
             id: id,
             previous_hash: previous_hash,
             block_hash: block_hash_str,
