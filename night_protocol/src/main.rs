@@ -2,6 +2,7 @@
 extern crate rocket;
 use rocket::response::content::Json;
 use rocket::State;
+use serde_json::json;
 
 mod blockchain;
 use blockchain::blockchain::*;
@@ -24,11 +25,11 @@ fn rocket() -> _ {
             blocks.genesus();
         }
         blocks.add_block(Transaction {
-            sender: "test".to_string(),
-            reciever: "net".to_string(),
+            sender: "net".to_string(),
+            reciever: "user".to_string(),
             amount: i * 5.0,
         });
-        if i == 30.0 {
+        if i == 100.0 { 
             break;
         }
     }
@@ -56,11 +57,15 @@ fn rocket() -> _ {
         )
     }
 
+    let balance: f64 = blocks.calculate_balance() + master_blocks.calculate_balance();
+    println!("{}", balance);
+
     //  server
     rocket::build()
         .manage(blocks)
         .manage(master_blocks)
         .mount("/transactions", routes![index, get_transaction])
+        .mount("/balance", routes![get_balance])
 }
 
 // Get all blocks pagination mode
@@ -72,6 +77,17 @@ fn index(page: i64, blocks: &State<Blockchain>, master_blocks: &State<Master>) -
     }
     let serialized = serde_json::to_string(&master_blocks.find_blocks_by_master_id(page)).unwrap();
     Json(serialized)
+}
+
+// Get Balance
+#[get("/")]
+fn get_balance(blocks: &State<Blockchain>, master_blocks: &State<Master>) -> Json<String> {
+    let balance: f64 = blocks.calculate_balance() + master_blocks.calculate_balance();
+    let data = json!({
+        "balance": balance.to_string()
+    });
+
+    Json(data.to_string())
 }
 
 // Find Transaction

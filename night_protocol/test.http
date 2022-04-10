@@ -2,14 +2,16 @@ GET http://localhost:8000
 
 ###
 
-GET http://localhost:8000/transactions/c5cb8c2079e82ae401e862f1e90914c0fd215a67aad97047b69c419d46d477a1
+GET http://localhost:8000/transactions/aa89390f927d1c05d70252caf9963e2c82c1fe153c906afe9fb51f0e3cd8c203
 
 ###
 
-GET http://localhost:8000/transactions?page=1
+GET http://localhost:8000/transactions?page=4
 Content-Type: application/json
 
 ###
+
+GET http://localhost:8000/balance
 
 POST http://localhost:8000/transaction
 content-type: application/json
