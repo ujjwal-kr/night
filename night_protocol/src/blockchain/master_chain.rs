@@ -29,7 +29,7 @@ impl Master {
                     transaction: Transaction {
                         sender: "test".to_string(),
                         reciever: "net".to_string(),
-                        amount: 10.0,
+                        amount: 0.0,
                     },
                 }]
                 .to_vec(),
@@ -96,6 +96,21 @@ impl Master {
                 amount: 0.00,
             },
         }
+    }
+
+    pub fn calculate_balance(&self) -> f64 {
+        let mut balance: f64 = 0.0;
+        for master_block in &self.master_blocks {
+            for block in &master_block.block_data {
+                if block.transaction.sender == "user".to_string() {
+                    balance = balance - block.transaction.amount;
+                } else {
+                    balance = balance + block.transaction.amount;
+                }
+            }
+        }
+
+        balance
     }
 }
 

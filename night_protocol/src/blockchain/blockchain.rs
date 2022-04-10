@@ -28,9 +28,9 @@ impl Blockchain {
                 0,
                 "genesus".to_string(),
                 Transaction {
-                    sender: "test".to_string(),
-                    reciever: "net".to_string(),
-                    amount: 500.0,
+                    sender: "net".to_string(),
+                    reciever: "user".to_string(),
+                    amount: 1000.0,
                 },
             )],
         }
@@ -38,9 +38,9 @@ impl Blockchain {
 
     pub fn genesus(&mut self) {
         let genesus = Block::new(0, "genesus".to_string(), Transaction {
-            sender: "test".to_string(),
-            reciever: "net".to_string(),
-            amount: 500.0,
+            sender: "net".to_string(),
+            reciever: "user".to_string(),
+            amount: 0.0,
         });
 
         self.blocks.push(genesus);
@@ -94,6 +94,18 @@ impl Blockchain {
                 amount: 0.00,
             },
         }
+    }
+
+    pub fn calculate_balance(&self) -> f64 {
+        let mut balance: f64 = 0.0;
+        for block in &self.blocks {
+            if block.transaction.sender == "user".to_string() {
+                balance = balance - block.transaction.amount;
+            } else {
+                balance = balance + block.transaction.amount;
+            }
+        }
+        balance
     }
 }
 
