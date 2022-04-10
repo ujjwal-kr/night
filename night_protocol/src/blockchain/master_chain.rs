@@ -68,31 +68,6 @@ impl Master {
         println!("Validated All Master Blocks");
     }
 
-    pub fn find_master_block_by_hash(&self, hash: String) -> MasterBlock {
-        for block in self.master_blocks.clone() {
-            if block.block_hash.trim() == hash.trim() {
-                return block;
-            }
-        }
-
-        MasterBlock {
-            id: 0,
-            block_hash: "null".to_string(),
-            previous_hash: "null".to_string(),
-            block_data: [Block {
-                id: -1,
-                previous_hash: "abcd".to_string(),
-                block_hash: "efgh".to_string(),
-                transaction: Transaction {
-                    sender: "test".to_string(),
-                    reciever: "net".to_string(),
-                    amount: 10.0,
-                },
-            }]
-            .to_vec(),
-        }
-    }
-
     pub fn find_block_by_hash(&self, hash: String) -> Block {
         for master_block in self.master_blocks.clone() {
             for block in master_block.block_data {
