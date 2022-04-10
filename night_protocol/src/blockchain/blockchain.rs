@@ -47,6 +47,7 @@ impl Blockchain {
     }
 
     pub fn add_block(&mut self, transactions: Transaction) {
+        self.validate_chain();
         let prev_block = &self.blocks[self.blocks.len() - 1];
         let new_block = Block::new(
             prev_block.id + 1,

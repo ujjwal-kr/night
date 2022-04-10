@@ -14,24 +14,21 @@ fn rocket() -> _ {
 
     let mut i = 0.0f64;
 
-    // Add some blocks for testing
+    // Me and da bois test the chain
 
     loop {
         i = i + 1.0;
         if blocks.blocks.len() == 20 {
-            master_blocks.validate_chain();
-            blocks.validate_chain();
             master_blocks.add_master_block(blocks.blocks);
             blocks.blocks = vec![];
             blocks.genesus();
         }
-
         blocks.add_block(Transaction {
             sender: "test".to_string(),
             reciever: "net".to_string(),
             amount: i * 5.0,
         });
-        if i == 100.0 {
+        if i == 30.0 {
             break;
         }
     }
@@ -66,10 +63,21 @@ fn rocket() -> _ {
         .mount("/transactions", routes![index, get_transaction])
 }
 
-// Get all blocks
+// Get all blocks TODO: make it based on the master id for pagination kinda thingy
 #[get("/")]
-fn index(blocks: &State<Blockchain>) -> Json<String> {
-    let serialized = serde_json::to_string(&blocks.blocks).unwrap();
+fn index(blocks: &State<Blockchain>, master_blocks: &State<Master>) -> Json<String> {
+    let mut final_blocks: Vec<Block> = vec![];
+    for block in &blocks.blocks {
+        final_blocks.push(block.clone());
+    }
+
+    for master_block in &master_blocks.master_blocks {
+        for block in &master_block.block_data {
+            final_blocks.push(block.clone())
+        }
+    }
+
+    let serialized = serde_json::to_string(&final_blocks).unwrap();
     Json(serialized)
 }
 
