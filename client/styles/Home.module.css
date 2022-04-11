@@ -1,0 +1,15 @@
+@import url("https://fonts.googleapis.com/css2?family=Work+Sans&display=swap");
+
+.text {
+  font-family: "Work Sans", sans-serif;
+}
+
+.top_container {
+  width: 100%;
+  height: 50vh;
+  background: black;
+  display: flex;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+}
