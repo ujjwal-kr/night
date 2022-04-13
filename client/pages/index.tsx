@@ -1,6 +1,6 @@
 import type { NextPage } from "next";
 import styles from "../styles/Home.module.css";
-import { Text, Title, Button } from "@mantine/core";
+import { Button } from "@mantine/core";
 import Particles from "react-tsparticles";
 
 const Home: NextPage = () => {
@@ -16,19 +16,18 @@ const Top_Container = () => {
     <>
       <div className={styles.top_container}>
         <div>
-          <Title order={1}>
+          <h1 className={styles.heading}>
             Night Protocol
-          </Title>
-          <Text size="lg" className={styles.text}>A blockchain protocol written in Rust</Text>
-          <br />
-          <Button className={styles.text} variant="gradient" gradient={{ from: 'orange', to: 'red' }} >Dashboard</Button>
+          </h1>
+          <p className={styles.description}>A minimal blockchain protocol written in Rust for beginners to understand <br /> the modern infrastructure of blockchain.</p>
+          <Button size="lg" className={styles.text} variant="gradient" gradient={{ from: 'orange', to: 'red' }} >Explore</Button>
         </div>
         
         <Particles
           params={{
             "particles": {
               "number": {
-                "value": 160,
+                "value": 140,
                 "density": {
                   "enable": true,
                   "value_area": 1500
