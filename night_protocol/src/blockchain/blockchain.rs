@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
 
-#[derive(Debug)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct Blockchain {
     pub blocks: Vec<Block>,
 }
@@ -46,13 +46,13 @@ impl Blockchain {
         self.blocks.push(genesus);
     }
 
-    pub fn add_block(&mut self, transactions: Transaction) {
+    pub fn add_block(&mut self, transaction: Transaction) {
         self.validate_chain();
         let prev_block = &self.blocks[self.blocks.len() - 1];
         let new_block = Block::new(
             prev_block.id + 1,
             prev_block.clone().block_hash,
-            transactions,
+            transaction,
         );
         self.blocks.push(new_block);
     }
@@ -122,3 +122,4 @@ impl Block {
         }
     }
 }
+

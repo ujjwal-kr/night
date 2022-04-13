@@ -616,6 +616,8 @@ dependencies = [
 name = "night_protocol"
 version = "0.1.0"
 dependencies = [
+ "lock_api",
+ "rand",
  "rocket",
  "serde",
  "serde_json",
