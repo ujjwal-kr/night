@@ -6,14 +6,6 @@ import Particles from "react-tsparticles";
 const Home: NextPage = () => {
   return (
     <>
-      <Top_Container />
-    </>
-  );
-};
-
-const Top_Container = () => {
-  return (
-    <>
       <div className={styles.top_container}>
         <div>
           <h1 className={styles.heading}>
@@ -22,7 +14,7 @@ const Top_Container = () => {
           <p className={styles.description}>A minimal blockchain protocol written in Rust for beginners to understand <br /> the modern infrastructure of blockchain.</p>
           <Button size="lg" className={styles.text} variant="gradient" gradient={{ from: 'orange', to: 'red' }} >Explore</Button>
         </div>
-        
+
         <Particles
           params={{
             "particles": {
@@ -68,7 +60,7 @@ const Top_Container = () => {
           }} />
       </div>
     </>
-  )
-}
+  );
+};
 
 export default Home;
