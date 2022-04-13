@@ -195,6 +195,13 @@ fn gamble(
         } else {
             win = false;
         }
+
+        if blocks.blocks.lock().unwrap().blocks.len() == 20 {
+            master_blocks.master_blocks.lock().unwrap().add_master_block(blocks.blocks.lock().unwrap().blocks.clone());
+            blocks.blocks.lock().unwrap().blocks = vec![];
+            blocks.blocks.lock().unwrap().genesus();
+        }
+
         if win == true {
             blocks.blocks.lock().unwrap().add_block(Transaction {
                 reciever: "user".to_string(),
@@ -204,7 +211,7 @@ fn gamble(
             let data = json!({
                 "win": "true",
                 "amount": 500.0,
-                "newBalance": 2500.0
+                "newBalance": amount + balance
             });
             Json(data.to_string())
         } else {

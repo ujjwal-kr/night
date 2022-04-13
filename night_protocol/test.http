@@ -6,7 +6,7 @@ GET http://localhost:8000/transactions/aa89390f927d1c05d70252caf9963e2c82c1fe153
 
 ###
 
-GET http://localhost:8000/transactions?page=0
+GET http://localhost:8000/transactions?page=1
 Content-Type: application/json
 
 ###
