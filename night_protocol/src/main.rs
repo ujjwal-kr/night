@@ -1,12 +1,25 @@
 #[macro_use]
 extern crate rocket;
+use rand::Rng;
 use rocket::response::content::Json;
 use rocket::State;
+use serde::{Deserialize, Serialize};
 use serde_json::json;
+use std::sync::Mutex;
 
 mod blockchain;
 use blockchain::blockchain::*;
 use blockchain::master_chain::*;
+
+#[derive(Serialize, Deserialize)]
+struct SharedBlockchain {
+    blocks: Mutex<Blockchain>,
+}
+
+#[derive(Serialize, Deserialize)]
+struct SharedMaster {
+    master_blocks: Mutex<Master>,
+}
 
 #[launch]
 fn rocket() -> _ {
@@ -19,17 +32,17 @@ fn rocket() -> _ {
 
     loop {
         i = i + 1.0;
-        if blocks.blocks.len() == 20 {
-            master_blocks.add_master_block(blocks.blocks);
-            blocks.blocks = vec![];
-            blocks.genesus();
-        }
+        // if blocks.blocks.len() == 20 {
+        //     master_blocks.add_master_block(blocks.blocks);
+        //     blocks.blocks = vec![];
+        //     blocks.genesus();
+        // }
         blocks.add_block(Transaction {
             sender: "net".to_string(),
             reciever: "user".to_string(),
-            amount: i * 5.0,
+            amount: 500.0,
         });
-        if i == 100.0 { 
+        if i == 2.0 {
             break;
         }
     }
@@ -62,27 +75,57 @@ fn rocket() -> _ {
 
     //  server
     rocket::build()
-        .manage(blocks)
-        .manage(master_blocks)
+        .manage(SharedBlockchain {
+            blocks: Mutex::new(blocks),
+        })
+        .manage(SharedMaster {
+            master_blocks: Mutex::new(master_blocks),
+        })
         .mount("/transactions", routes![index, get_transaction])
         .mount("/balance", routes![get_balance])
+        .mount("/gamble", routes![gamble])
 }
 
 // Get all blocks pagination mode
 #[get("/?<page>")]
-fn index(page: i64, blocks: &State<Blockchain>, master_blocks: &State<Master>) -> Json<String> {
+fn index(
+    page: i64,
+    shared_blocks: &State<SharedBlockchain>,
+    shared_master_blocks: &State<SharedMaster>,
+) -> Json<String> {
+    let blocks: &SharedBlockchain = shared_blocks.inner();
+    let master_blocks: &SharedMaster = shared_master_blocks.inner();
+
     if page == 0 {
-        let serialized = serde_json::to_string(&blocks.blocks).unwrap();
+        let serialized = serde_json::to_string(&blocks.blocks.lock().unwrap().blocks).unwrap();
         return Json(serialized);
     }
-    let serialized = serde_json::to_string(&master_blocks.find_blocks_by_master_id(page)).unwrap();
+    let serialized = serde_json::to_string(
+        &master_blocks
+            .master_blocks
+            .lock()
+            .unwrap()
+            .find_blocks_by_master_id(page),
+    )
+    .unwrap();
     Json(serialized)
 }
 
 // Get Balance
 #[get("/")]
-fn get_balance(blocks: &State<Blockchain>, master_blocks: &State<Master>) -> Json<String> {
-    let balance: f64 = blocks.calculate_balance() + master_blocks.calculate_balance();
+fn get_balance(
+    shared_blocks: &State<SharedBlockchain>,
+    shared_master_blocks: &State<SharedMaster>,
+) -> Json<String> {
+    let blocks: &SharedBlockchain = shared_blocks.inner();
+    let master_blocks: &SharedMaster = shared_master_blocks.inner();
+
+    let balance: f64 = blocks.blocks.lock().unwrap().calculate_balance()
+        + master_blocks
+            .master_blocks
+            .lock()
+            .unwrap()
+            .calculate_balance();
     let data = json!({
         "balance": balance.to_string()
     });
@@ -94,12 +137,16 @@ fn get_balance(blocks: &State<Blockchain>, master_blocks: &State<Master>) -> Jso
 #[get("/<hash>")]
 fn get_transaction(
     hash: String,
-    master_blocks: &State<Master>,
-    blocks: &State<Blockchain>,
+    shared_master_blocks: &State<SharedMaster>,
+    shared_blocks: &State<SharedBlockchain>,
 ) -> Json<String> {
+
+    let blocks: &SharedBlockchain = shared_blocks.inner();
+    let master_blocks: &SharedMaster = shared_master_blocks.inner();
+
     let block: Block;
-    let possible_master_block = master_blocks.find_block_by_hash(hash.clone());
-    let possible_block = blocks.find_block_by_hash(hash);
+    let possible_master_block = master_blocks.master_blocks.lock().unwrap().find_block_by_hash(hash.clone());
+    let possible_block = blocks.blocks.lock().unwrap().find_block_by_hash(hash);
 
     if possible_block.id != 0 {
         block = possible_block;
@@ -115,4 +162,70 @@ fn get_transaction(
 
     let serialized = serde_json::to_string(&block).unwrap();
     Json(serialized)
+}
+
+// Gamble func
+
+#[post("/?<amount>")]
+fn gamble(
+    amount: f64,
+    shared_blocks: &State<SharedBlockchain>,
+    shared_master_blocks: &State<SharedMaster>,
+) -> Json<String> {
+    let blocks: &SharedBlockchain = shared_blocks.inner();
+    let master_blocks: &SharedMaster = shared_master_blocks.inner();
+
+    let balance: f64 = blocks.blocks.lock().unwrap().calculate_balance()
+        + master_blocks
+            .master_blocks
+            .lock()
+            .unwrap()
+            .calculate_balance();
+    if amount > balance {
+        let data = json!({
+            "error": "Balance Error"
+        });
+        Json(data.to_string())
+    } else {
+        let win: bool;
+        let mut rng = rand::thread_rng();
+        let num: i32 = rng.gen_range(-1..2);
+        if num == 1 {
+            win = true;
+        } else {
+            win = false;
+        }
+
+        if blocks.blocks.lock().unwrap().blocks.len() == 20 {
+            master_blocks.master_blocks.lock().unwrap().add_master_block(blocks.blocks.lock().unwrap().blocks.clone());
+            blocks.blocks.lock().unwrap().blocks = vec![];
+            blocks.blocks.lock().unwrap().genesus();
+        }
+
+        if win == true {
+            blocks.blocks.lock().unwrap().add_block(Transaction {
+                reciever: "user".to_string(),
+                sender: "net".to_string(),
+                amount: amount * 1.5,
+            });
+            let data = json!({
+                "win": "true",
+                "amount": 500.0,
+                "newBalance": amount + balance
+            });
+            Json(data.to_string())
+        } else {
+            blocks.blocks.lock().unwrap().add_block(Transaction {
+                reciever: "net".to_string(),
+                sender: "user".to_string(),
+                amount: amount,
+            });
+            let data = json!({
+                "win": "false",
+                "amount": amount,
+                "newBalance": balance - amount
+            });
+            Json(data.to_string())
+        }
+    }
 }
