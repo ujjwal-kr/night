@@ -1,4 +1,4 @@
-import { Center, Container, TextInput, Button, Title, Table } from "@mantine/core"
+import { Center, Container, TextInput, Button, Title, Table, Pagination } from "@mantine/core"
 import { NextPage } from "next"
 import { useEffect, useState } from "react"
 import Service from "../services/transaction"
@@ -7,7 +7,7 @@ import styles from "../styles/Dashboard.module.css"
 
 const GambleForm = () => {
     const [value, setVal]: [string, Function] = useState('')
-    const [balance, setBalance]: [Number, Function] = useState(0) // recoil dispatch
+    const [balance, setBalance]: [Number, Function] = useState(0)
     useEffect(() => {
         getBlanance()
     }, [])
@@ -35,14 +35,26 @@ const GambleForm = () => {
 
 const TransactionComponent = () => {
     // listen to add transaction
-    let [page, setPage]: [Number, Function] = useState(0)
+    let [dataLength, setDataLength]: [number, Function] = useState(0)
+    let [page, setPage] = useState(1)
     let [transactions, setTransaction]: [Block[], Function] = useState([])
+
     useEffect(() => {
         getTransactions()
+    }, [page])
+
+    useEffect(() => {
+        getDataLength()
     }, [])
+
     const getTransactions = async () => {
         let elements: Block[] = await Service.getTransactions(page)
         setTransaction(elements)
+    }
+
+    const getDataLength = async () => {
+        let dataLength = await Service.countDataLength()
+        setDataLength(dataLength)
     }
 
     const rows = transactions.map((element) => (
@@ -53,12 +65,10 @@ const TransactionComponent = () => {
             <td>${element.transaction.amount.toString()}</td>
         </tr>
     ))
-
-    console.log(transactions)
     return (
         <div>
-            <h1 style={{marginTop: 5 + `rem`}} className={styles.text}>Transactions</h1>
-            <Table className={styles.text} style={{ textAlign: "center" }}>
+            <h1 style={{ marginTop: 5 + `rem` }} className={styles.text}>Transactions</h1>
+            <Table className={styles.text}>
                 <thead>
                     <tr >
                         <th>ID</th>
@@ -69,6 +79,12 @@ const TransactionComponent = () => {
                 </thead>
                 <tbody>{rows}</tbody>
             </Table>
+            <br />
+            <br />
+            <Center>
+            <Pagination onChange={setPage} total={dataLength} siblings={1} initialPage={1} />
+            </Center>
+            <br />
         </div>
     )
 }
@@ -80,7 +96,6 @@ const Dashboard: NextPage = () => {
                 <Container>
                     <h1 className={styles.heading}>Dashboard</h1>
                     <GambleForm />
-                    {/* spacer */}
                     <TransactionComponent />
                 </Container>
             </div>

@@ -25,6 +25,14 @@ const Service = {
         }).catch(e => {
             return e
         })
+    },
+
+    countDataLength: async function() {
+        return await axios.get(`${URL}/countmaster`).then(data => {
+            return data.data.master_count
+        }).catch(e => {
+            return e
+        })
     }
 }
 

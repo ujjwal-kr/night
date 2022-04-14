@@ -50,7 +50,7 @@ struct SharedMaster {
 #[launch]
 fn rocket() -> _ {
     let mut blocks = Blockchain::new();
-    let master_blocks = Master::new();
+    let mut master_blocks = Master::new();
 
     let mut i = 0.0f64;
 
@@ -58,17 +58,17 @@ fn rocket() -> _ {
 
     loop {
         i = i + 1.0;
-        // if blocks.blocks.len() == 20 {
-        //     master_blocks.add_master_block(blocks.blocks);
-        //     blocks.blocks = vec![];
-        //     blocks.genesus();
-        // }
+        if blocks.blocks.len() == 20 {
+            master_blocks.add_master_block(blocks.blocks);
+            blocks.blocks = vec![];
+            blocks.genesus();
+        }
         blocks.add_block(Transaction {
             sender: "net".to_string(),
             reciever: "user".to_string(),
-            amount: 500.0,
+            amount: i * 500.0,
         });
-        if i == 2.0 {
+        if i == 100.0 {
             break;
         }
     }
@@ -111,6 +111,17 @@ fn rocket() -> _ {
         .mount("/transactions", routes![index, get_transaction])
         .mount("/balance", routes![get_balance])
         .mount("/gamble", routes![gamble])
+        .mount("/countmaster", routes![count_master])
+}
+
+// Count master blocks
+#[get("/")]
+fn count_master(shared_master_blocks: &State<SharedMaster>) -> Json<String> {
+    let master_blocks: &SharedMaster = shared_master_blocks.inner();
+    let data = json!({
+        "master_count" : master_blocks.master_blocks.lock().unwrap().master_blocks.len()
+    });
+    Json(data.to_string())
 }
 
 // Get all blocks pagination mode
@@ -123,7 +134,7 @@ fn index(
     let blocks: &SharedBlockchain = shared_blocks.inner();
     let master_blocks: &SharedMaster = shared_master_blocks.inner();
 
-    if page == 0 {
+    if page == 1 {
         let serialized = serde_json::to_string(&blocks.blocks.lock().unwrap().blocks).unwrap();
         return Json(serialized);
     }
@@ -132,7 +143,7 @@ fn index(
             .master_blocks
             .lock()
             .unwrap()
-            .find_blocks_by_master_id(page),
+            .find_blocks_by_master_id(page - 1),
     )
     .unwrap();
     Json(serialized)
