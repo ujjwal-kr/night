@@ -1,0 +1,31 @@
+import axios from "axios"
+
+const URL = "http://localhost:8000"
+
+const Service = {
+    getBlanance: async function() {
+        return await axios.get(`${URL}/balance`).then(data => {
+            return data.data
+        }).catch(e => {
+            return e
+        })
+    },
+
+    getTransactions: async function(page: Number) {
+        return await axios.get(`${URL}/transaction?page=${page}`).then(data => {
+            return data.data
+        }).catch(e => {
+            return e
+        })
+    },
+
+    gamble: async function(amount: Number) {
+        return await axios.post(`${URL}/gamble?amount=${amount}`).then(data => {
+            return data.data
+        }).catch(e => {
+            return e
+        })
+    }
+}
+
+export default Service
