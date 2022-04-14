@@ -48,7 +48,7 @@ const TransactionComponent = () => {
     }, [])
 
     const getTransactions = async () => {
-        let elements: Block[] = await Service.getTransactions(page)
+        let elements: Block[] = await Service.getTransactions(dataLength + 1 - page)
         setTransaction(elements)
     }
 
