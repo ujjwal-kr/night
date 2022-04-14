@@ -12,7 +12,7 @@ const Service = {
     },
 
     getTransactions: async function(page: Number) {
-        return await axios.get(`${URL}/transaction?page=${page}`).then(data => {
+        return await axios.get(`${URL}/transactions?page=${page}`).then(data => {
             return data.data
         }).catch(e => {
             return e
