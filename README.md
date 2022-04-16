@@ -13,4 +13,4 @@ A simple blockchain written from scratch in the rust programming language. This 
 
 ## How it works
 
-It has 2 chains for now, the transaction chain and the master chain. When there are more than 20 blocks in the transaction chain, 30 of them are compressed and sent to a block in the master chain. I implemented this algorithm to make the validations faster. Its not peer to peer, but has all the characteristics of a normal chain. You can make transactions and also hopefully play a gambling game in the chain. I'm trying to make the multiple wallet system for now because currently it has support for only one wallet.
+It has 2 chains for now, the transaction chain and the master chain. When there are more than 20 blocks in the transaction chain, all of them are compressed and sent to a block in the master chain. I implemented this algorithm to make the validations faster. Its not peer to peer, but has all the characteristics of a normal chain. You can make transactions and also hopefully play a gambling game in the chain. I'm trying to make the multiple wallet system for now because currently it has support for only one wallet.
