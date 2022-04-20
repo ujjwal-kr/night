@@ -7,7 +7,7 @@ const Service = {
         return await axios.get(`${URL}/balance`).then(data => {
             return data.data
         }).catch(e => {
-            return e
+            return alert("Try running the rust server locally.")
         })
     },
 
