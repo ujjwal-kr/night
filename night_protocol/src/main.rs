@@ -230,7 +230,8 @@ fn gamble(
     } else {
         let win: bool;
         let mut rng = rand::thread_rng();
-        let num: i32 = rng.gen_range(-1..2);
+        let num: i32 = rng.gen_range(0..2);
+        println!("{}", num);
         if num == 1 {
             win = true;
         } else {

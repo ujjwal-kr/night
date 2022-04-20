@@ -15,7 +15,7 @@ GET http://localhost:8000/balance
 
 ###
 
-POST http://localhost:8000/gamble?amount=10000000
+POST http://localhost:8000/gamble?amount=200
 content-type: application/json
 
 # res 1: {
