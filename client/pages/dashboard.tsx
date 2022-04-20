@@ -112,14 +112,6 @@ const TransactionComponent = ({ transactionEvent }: { transactionEvent: number }
     let dataLength = await Service.countDataLength();
     setDataLength(dataLength);
   };
-  const rows = transactions.map((element) => (
-    <tr key={element.id.toString()}>
-      <td>{element.block_hash.substring(0, 8)}</td>
-      <td>{element.transaction.sender}</td>
-      <td>{element.transaction.reciever}</td>
-      <td>${element.transaction.amount.toString()}</td>
-    </tr>
-  ));
   return (
     <div>
       <h1 style={{ marginTop: 5 + `rem` }} className={styles.text}>
@@ -134,7 +126,18 @@ const TransactionComponent = ({ transactionEvent }: { transactionEvent: number }
             <th>Amount</th>
           </tr>
         </thead>
-        <tbody>{rows}</tbody>
+          <tbody>
+            {transactions.map(element => {
+              return (
+                <tr key={element.id.toString()}>
+                  <td>{element.block_hash.substring(0, 8)}</td>
+                  <td>{element.transaction.sender}</td>
+                  <td>{element.transaction.reciever}</td>
+                  <td>${element.transaction.amount.toString()}</td>
+                </tr>
+              )
+            })}
+          </tbody>
       </Table>
       <br />
       <br />

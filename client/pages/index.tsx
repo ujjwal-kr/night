@@ -1,4 +1,5 @@
 import type { NextPage } from "next";
+import Link from "next/link";
 import styles from "../styles/Home.module.css";
 import { Button } from "@mantine/core";
 import Particles from "react-tsparticles";
@@ -25,14 +26,28 @@ const Home: NextPage = () => {
             A minimal blockchain protocol written in Rust for beginners to
             understand <br /> the modern infrastructure of blockchain.
           </p>
-          <Button
-            size="lg"
-            className={styles.text}
-            variant="gradient"
-            gradient={{ from: "orange", to: "red" }}
-          >
-            Explore
-          </Button>
+          <Link href="/explore">
+            <Button
+              size="lg"
+              className={styles.text}
+              variant="gradient"
+              gradient={{ from: "orange", to: "red" }}
+            >
+              Explore
+            </Button>
+          </Link>
+
+          <Link href="/dashboard">
+            <Button
+            style={{marginLeft: 1+'rem'}}
+              size="lg"
+              className={styles.text}
+              variant="gradient"
+              gradient={{ from: "orange", to: "red" }}
+            >
+              Dashboard
+            </Button>
+          </Link>
         </div>
 
         <Particles
