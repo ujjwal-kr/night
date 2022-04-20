@@ -68,7 +68,7 @@ fn rocket() -> _ {
             reciever: "user".to_string(),
             amount: i * 500.0,
         });
-        if i == 40.0 {
+        if i == 50.0 {
             break;
         }
     }

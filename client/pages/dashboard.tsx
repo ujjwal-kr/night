@@ -15,11 +15,11 @@ import { GambleData } from "../types/gamble";
 import styles from "../styles/Dashboard.module.css";
 import { useNotifications } from "@mantine/notifications";
 const GambleForm = ({
-  setTransaction,
-  transaction,
+  setTransactionEvent,
+  transactionEvent,
 }: {
-  setTransaction: Dispatch<SetStateAction<number>>;
-  transaction: number;
+  setTransactionEvent: Dispatch<SetStateAction<number>>;
+  transactionEvent: number;
 }) => {
   const [value, setVal] = useState("");
   const [balance, setBalance] = useState(0);
@@ -49,7 +49,7 @@ const GambleForm = ({
     } else {
       alert("Wrong Gamble amount");
     }
-    setTransaction(transaction + 1);
+    setTransactionEvent(transactionEvent + 1);
   };
   return (
     <>
@@ -77,23 +77,23 @@ const GambleForm = ({
   );
 };
 
-const TransactionComponent = ({ transaction }: { transaction: number }) => {
+const TransactionComponent = ({ transactionEvent }: { transactionEvent: number }) => {
   let [dataLength, setDataLength] = useState(0);
-  let [page, setPage] = useState(1);
+  let [page, setPage] = useState(0);
   let [transactions, setTransaction] = useState<Block[]>([]);
   useEffect(() => {
-    getTransactions();
-  }, [page, transaction]);
-  useEffect(() => {
     getDataLength();
-  }, []);
+  }, [transactionEvent]);
+  useEffect(() => {
+    getTransactions();
+  }, [page, transactionEvent]);
   const refresh = () => {
     getDataLength();
     getTransactions();
   };
   const getTransactions = async () => {
     let elements: Block[] = await Service.getTransactions(
-      dataLength + 1 - page
+      dataLength - page + 1
     );
     setTransaction(elements);
   };
@@ -150,15 +150,15 @@ const TransactionComponent = ({ transaction }: { transaction: number }) => {
   );
 };
 const Dashboard: NextPage = () => {
-  const [transaction, setTransaction] = useState(0);
+  const [transactionEvent, setTransactionEvent] = useState(0);
 
   return (
     <Center>
       <div className={styles.container}>
         <Container>
           <h1 className={styles.heading}>Dashboard</h1>
-          <GambleForm {...{ setTransaction, transaction }} />
-          <TransactionComponent {...{ transaction }} />
+          <GambleForm {...{ setTransactionEvent, transactionEvent }} />
+          <TransactionComponent {...{ transactionEvent }} />
         </Container>
       </div>
     </Center>
