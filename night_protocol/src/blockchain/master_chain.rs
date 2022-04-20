@@ -46,7 +46,11 @@ impl Master {
     }
 
     pub fn validate_master_block(&self, block: &MasterBlock, previous_block: &MasterBlock) -> bool {
-        if previous_block.block_hash.trim() == block.previous_hash.trim() {
+        let mut hasher = Sha256::new();
+        hasher.update(format!("{}-{}-{:?}", previous_block.id, previous_block.previous_hash, previous_block.block_data));
+        let previous_block_hash: String = format!("{:x}", hasher.finalize());
+
+        if block.previous_hash.trim() == previous_block_hash.trim() {
             true
         } else {
             false
