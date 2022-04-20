@@ -1,1 +1,32 @@
-hmm
+<div className="explore">
+    <div className="container">
+        # Night Protocol Documentation
+        Hello I'm [ujjwal-kr](https://github.com/ujjwal-kr) and interested in computer science. I'm working on a long term research project related to blockchain and this project exists to help me gain some experience, and also to share my journey so that other people may learn about it and contribute their ideas as well. If you are interested to work with me on my research, hit me up on [epicujjwal@protonmail.com](mailto:epicujjwal@protonmail.com)
+
+        Night is a blockchain protocol written in the rust programming language and is created to give people insights about the internal structure of a blockchain and help me with further research into this topic   . To be noted that this is v1 of the project and does not implement the distributed natute of blockchain, and also dosen't have any multiple wallet system. Those features will be availabe soon with v2 and this paper will be updated accordingly.
+
+        ## Prerequisites
+        - Basic rust, [the rust book](https://doc.rust-lang.org/book/) is a good resource to learn it
+        - Javascript & React
+        - No knowledge of blockchain is required
+
+        ## Structure
+
+        - The `night_protocol` folder contains the rust backend and blockchain source.
+        - The `client` folder contains a client for the blockchain written in nextjs and typescript.
+
+        In this document I'm not going to talk about the `client` folder much as it is not included in the core structure of the chain. But to summarize, it is a REST client interacting with the exposed blockchain REST API, the calls can be seen in the [services](https://github.com/ujjwal-kr/night/tree/main/client/services) folder. Here are some useful routes:
+        - GET `/transactions?page=<number>` Sends paginated list of transactions done
+        - POST `/gamble?amount=<amount>` Gambles with the amount
+        - GET `/balance` returns the balance of user
+
+        Terms used here will be explained ahead in the documentation, this is for client API reference.
+
+        ## `night_protocol`
+        If we look into the `/src` of the [folder](https://github.com/ujjwal-kr/night/tree/main/night_protocol), we'll find `main.rs` and `blockchain` folder. The main file defines the program initiation and has routes and functions to let the client interact with the chain. The blockchain folder has 2 files, `blockchain.rs` and `master_chain.rs`. They are the blueprints and interfaces of the project.
+
+        ### What is a Block?
+        Block is a data structure containing some properties. Here the block contains properties like transaction and a unique identifier. There are also some properties in the blocks which makes them connected to each other, hence forming a blockchain. A blockchain is basically just connected blocks, or rather "chained" blocks.
+
+    </div>
+</div>

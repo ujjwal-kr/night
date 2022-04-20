@@ -1,7 +1,38 @@
+@font-face {
+  font-family: "Whyte";
+  src: url("https://devstaticasset.azureedge.net/font/ABCWhyte-Regular.woff2")
+    format("woff2");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+.explore > .container {
+  padding: 1%;
+  padding-left: 18%;
+  padding-right: 18%;
+  font-size: 1.2rem;
+}
+
+.explore  a {
+  color: orange !important;
+  text-decoration: underline !important;
+}
+
+.explore code {
+  color: rgb(240, 75, 54);
+  background-color: rgb(42, 42, 42);
+  padding: .3%;
+  padding-top: 0;
+  padding-bottom: 0;
+  border-radius: 5px;
+}
+
 html,
 body {
   padding: 0;
   margin: 0;
+  font-family: "Whyte", sans-serif !important;
 }
 
 a {
