@@ -87,11 +87,6 @@ const TransactionComponent = ({ transactionEvent }: { transactionEvent: number }
   useEffect(() => {
     getTransactions();
   }, [page, transactionEvent]);
-  const refresh = () => {
-    getDataLength();
-    setPage(1)
-    getTransactions();
-  };
   const getTransactions = async () => {
     if (page == 1 || page == 0) {
       let elements: Block[] = await Service.getTransactions(1);
@@ -109,7 +104,7 @@ const TransactionComponent = ({ transactionEvent }: { transactionEvent: number }
   };
   const rows = transactions.map((element) => (
     <tr key={element.id.toString()}>
-      <td>{element.id.toString()}</td>
+      <td>{element.block_hash.substring(0, 8)}</td>
       <td>{element.transaction.sender}</td>
       <td>{element.transaction.reciever}</td>
       <td>${element.transaction.amount.toString()}</td>
@@ -120,20 +115,12 @@ const TransactionComponent = ({ transactionEvent }: { transactionEvent: number }
       <h1 style={{ marginTop: 5 + `rem` }} className={styles.text}>
         Transactions
       </h1>
-      <Button
-        className={styles.text}
-        variant="gradient"
-        gradient={{ from: "teal", to: "blue", deg: 60 }}
-        onClick={refresh}
-      >
-        Refresh
-      </Button>
       <br />
       <br />
       <Table className={styles.text}>
         <thead>
           <tr>
-            <th>ID</th>
+            <th>Hash</th>
             <th>Sender</th>
             <th>Reciever</th>
             <th>Amount</th>
