@@ -1,12 +1,4 @@
-import {
-  Center,
-  Container,
-  TextInput,
-  Button,
-  Title,
-  Table,
-  Pagination,
-} from "@mantine/core";
+import { Center, Container, TextInput, Button, Title, Table, Pagination } from "@mantine/core";
 import { NextPage } from "next";
 import { useEffect, useState, Dispatch, SetStateAction } from "react";
 import Service from "../services/transaction";
@@ -86,7 +78,6 @@ const GambleForm = ({
     </>
   );
 };
-
 const TransactionComponent = ({ transactionEvent }: { transactionEvent: number }) => {
   let [dataLength, setDataLength] = useState(0);
   let [page, setPage] = useState(0);
@@ -126,18 +117,18 @@ const TransactionComponent = ({ transactionEvent }: { transactionEvent: number }
             <th>Amount</th>
           </tr>
         </thead>
-          <tbody>
-            {transactions.map(element => {
-              return (
-                <tr key={element.id.toString()}>
-                  <td>{element.block_hash.substring(0, 8)}</td>
-                  <td>{element.transaction.sender}</td>
-                  <td>{element.transaction.reciever}</td>
-                  <td>${element.transaction.amount.toString()}</td>
-                </tr>
-              )
-            })}
-          </tbody>
+        <tbody>
+          {transactions.map(element => {
+            return (
+              <tr key={element.id.toString()}>
+                <td>{element.block_hash.substring(0, 8)}</td>
+                <td>{element.transaction.sender}</td>
+                <td>{element.transaction.reciever}</td>
+                <td>${element.transaction.amount.toString()}</td>
+              </tr>
+            )
+          })}
+        </tbody>
       </Table>
       <br />
       <br />
