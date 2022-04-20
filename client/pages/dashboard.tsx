@@ -34,20 +34,30 @@ const GambleForm = ({
   const gamble = async () => {
     if (!isNaN(parseInt(value))) {
       let res: GambleData = await Service.gamble(parseInt(value));
-      if (res.win == "true") {
+      if (res.error == "Balance Error") {
         showNotification({
-          message: "You won",
-          color: "green",
-        });
-      } else {
-        showNotification({
-          message: "You lost",
+          message: "Insufficient Balance",
           color: "red",
         });
+      } else {
+        if (res.win == "true") {
+          showNotification({
+            message: "You won",
+            color: "green",
+          });
+        } else {
+          showNotification({
+            message: "You lost",
+            color: "red",
+          });
+        }
+        setBalance(res.newBalance);
       }
-      setBalance(res.newBalance);
     } else {
-      alert("Wrong Gamble amount");
+      showNotification({
+        message: "Invalid Amount",
+        color: "red",
+      });
     }
     setTransactionEvent(transactionEvent + 1);
   };
@@ -115,8 +125,6 @@ const TransactionComponent = ({ transactionEvent }: { transactionEvent: number }
       <h1 style={{ marginTop: 5 + `rem` }} className={styles.text}>
         Transactions
       </h1>
-      <br />
-      <br />
       <Table className={styles.text}>
         <thead>
           <tr>
