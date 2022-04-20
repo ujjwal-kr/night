@@ -89,13 +89,19 @@ const TransactionComponent = ({ transactionEvent }: { transactionEvent: number }
   }, [page, transactionEvent]);
   const refresh = () => {
     getDataLength();
+    setPage(1)
     getTransactions();
   };
   const getTransactions = async () => {
-    let elements: Block[] = await Service.getTransactions(
-      dataLength - page + 1
-    );
-    setTransaction(elements);
+    if (page == 1 || page == 0) {
+      let elements: Block[] = await Service.getTransactions(1);
+      setTransaction(elements);
+    } else {
+      let elements: Block[] = await Service.getTransactions(
+        dataLength - page + 2
+      );
+      setTransaction(elements);
+    }
   };
   const getDataLength = async () => {
     let dataLength = await Service.countDataLength();

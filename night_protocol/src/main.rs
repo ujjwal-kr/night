@@ -66,9 +66,9 @@ fn rocket() -> _ {
         blocks.add_block(Transaction {
             sender: "net".to_string(),
             reciever: "user".to_string(),
-            amount: i * 500.0,
+            amount: i * 10.0,
         });
-        if i == 50.0 {
+        if i == 100.0 {
             break;
         }
     }
