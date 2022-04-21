@@ -42,7 +42,7 @@ As said earlier, this project has got no multiple wallet system. So transactions
 
 ### Validation
 
-Whenever a transaction is made, a validation function is fired to ensure that all the blocks before the arriving blocks are valid. The validation function takes two blocks at onece, and hashes the first block and compares the hash to the `previous_hash` field of the second block. This is done for the entire chain, each time a new block is added. If the validation fails, no new transactions can be performed. It also means that as the number of blocks increases, the time taken for the validation function to run also increases. We have addressed this issue by adding something called a `master` block.
+Whenever a transaction is made, a validation function is fired to ensure that all the blocks before the arriving blocks are valid. The validation function takes two blocks at onece, and hashes the first block and compares the hash to the `previous_hash` field of the second block. This is done for the entire chain, each time a new block is added. If the validation fails, no new transactions can be performed, and the balance returns 0. It also means that as the number of blocks increases, the time taken for the validation function to run also increases. We have addressed this issue by adding something called a `master` block.
 
 ### Master Block
 
