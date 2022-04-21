@@ -29,9 +29,30 @@ If we look into the `/src` of the [folder](https://github.com/ujjwal-kr/night/tr
 
 ### What is a Block?
 Block is a data structure containing some properties. Here the block contains properties like transaction and a unique identifier. There are also some properties in the blocks which makes them connected to each other, hence forming a blockchain. A blockchain is basically just connected blocks, or rather "chained" blocks. Here is an illustration of the blockchain:
+
 <div style={{width: "100%", textAlign: "center"}}> 
-    <Image src="/blocks.png" height={320} width={1080} />
+    <Image src="/blocks.png" height={315} width={1080} />
 </div>
+
+Here all the properties of the blocks are shown. Each block contains an id, previous_hash, transaction & block_hash. I use the [SHA256 algorithm](https://en.wikipedia.org/wiki/SHA-2) to [hash](https://en.wikipedia.org/wiki/Hash_function) the blocks. Hash is a fingerprint of the input data, which can be used for verification as a hash is alaways unique for each input. Here the input is the entire block data (id, previous_hash and transaction). `previous_hash` is the hash of a block which is prior to it, this is what makes them connected, and allows the validation function to make sure nothing has been altered. The first block has no prior block therefore the previous_hash is set to genesis. When a new block is created, hash of the previous block is taken as stored in the previous_hash field of the new block.
+
+### Transaction
+
+As said earlier, this project has got no multiple wallet system. So transactions are either from the network to the user or from the user to the network. For each transaction made, a new block is created. A transaction has amount, sender and reciever. The balance is not stored anywhere in the chain as it's not practical to update the chain, the blockchain is meant to be immutable by natute. The balance is calculated on the fly by scanning the entire blockchain and you can find the function in blockchain.rs file. A transaction looks like `{sender: "net", reciever: "user", amount: 500}`
+
+### Validation
+
+Whenever a transaction is made, a validation function is fired to ensure that all the blocks before the arriving blocks are valid. The validation function takes two blocks at onece, and hashes the first block and compares the hash to the `previous_hash` field of the second block. This is done for the entire chain. It also means that as the number of blocks increases, the time taken for the validation function to run also increases. We have addressed this issue by adding something called a `master` block.
+
+### Master Block
+
+The master block contains a blockchain. The chain formed by the master block is known as the "master_chain", and whenever the blockchain exeedes 20 blocks, the entire blockchain is validated, compressed and sent to the master_chain, as a master block. And then the blockchain is deleted. This way, one master_chain can hold 20 transactions. `master_chain.rs` has all the methods related to the master_chain.
+
+<div style={{width: "100%", textAlign: "center"}}> 
+    <Image src="/master-chain.png" height={315} width={1080} />
+</div>
+
+Master_chain has all the properties of a normal blockchain, And it makes it easy to validate all the transactions since now instead of validating each transaction, we only need to validate a master_block and the speed of the validation algorithm is increased by 2000% (20 times). The validation function to validate the master_chain is same as the blockchain and works on hash comparison.
 
 </div>
 </div>
