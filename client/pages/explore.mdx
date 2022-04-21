@@ -38,7 +38,7 @@ Here all the properties of the blocks are shown. Each block contains an id, prev
 
 ### Transaction
 
-As said earlier, this project has got no multiple wallet system. So transactions are either from the network to the user or from the user to the network. For each transaction made, a new block is created. A transaction has amount, sender and reciever. The balance is not stored anywhere in the chain as it's not practical to update the chain, the blockchain is meant to be immutable by natute. The balance is calculated on the fly by scanning the entire blockchain and you can find the function in blockchain.rs file. A transaction looks like `{sender: "net", reciever: "user", amount: 500}`
+As said earlier, this project has got no multiple wallet system. So transactions are either from the network to the user or from the user to the network. For each transaction made, a new block is created. A transaction has amount, sender and reciever. The balance is not stored anywhere in the chain as it's not practical to update the chain, the blockchain is meant to be immutable by natute. The balance is calculated on the fly by scanning the entire blockchain and you can find the function in blockchain.rs file. A transaction looks like `{sender: "net", reciever: "user", amount: 500}` For now, the only way to do a transaction is to use the gamble method.
 
 ### Validation
 
@@ -53,6 +53,11 @@ The master block contains a blockchain. The chain formed by the master block is 
 </div>
 
 Master_chain has all the properties of a normal blockchain, And it makes it easy to validate all the transactions since now instead of validating each transaction, we only need to validate a master_block and the speed of the validation algorithm is increased by 2000% (20 times). The validation function to validate the master_chain is same as the blockchain and works on hash comparison.
+
+
+### Improvements
+
+Usage of this chain in production is not practical yet, because it still requires trust of the user who is hosting it. In future, we can make it distributed by using p2p technology and also make multiple wallet system using cryptographic signing. Thanks for reading the paper. If you have any ideas to discuss with me, you can join my [discod server](https://dsc.gg/kekwlabs).
 
 </div>
 </div>
