@@ -38,11 +38,14 @@ impl Master {
     }
 
     pub fn add_master_block(&mut self, block_data: Vec<Block>) {
-        self.validate_chain();
-        let prev_block = &self.master_blocks[&self.master_blocks.len() - 1];
-        let new_block =
-            MasterBlock::new(prev_block.id + 1, prev_block.clone().block_hash, block_data);
-        self.master_blocks.push(new_block);
+        if self.validate_chain() == true {
+            let prev_block = &self.master_blocks[&self.master_blocks.len() - 1];
+            let new_block =
+                MasterBlock::new(prev_block.id + 1, prev_block.clone().block_hash, block_data);
+            self.master_blocks.push(new_block);
+        } else {
+            return
+        }
     }
 
     pub fn validate_master_block(&self, block: &MasterBlock, previous_block: &MasterBlock) -> bool {
@@ -57,16 +60,17 @@ impl Master {
         }
     }
 
-    pub fn validate_chain(&self) {
+    pub fn validate_chain(&self) -> bool {
         for i in 1..self.master_blocks.len() {
             let block = &self.master_blocks[i];
             let prev_block = &self.master_blocks[i - 1].clone();
             if self.validate_master_block(block, prev_block) == false {
-                println!("block bad");
-                return;
+                println!("Master chain validation failed, aborting.");
+                return false
             }
         }
         println!("Validated All Master Blocks");
+        return true
     }
 
     pub fn find_blocks_by_master_id(&self, id: i64) -> Vec<Block> {

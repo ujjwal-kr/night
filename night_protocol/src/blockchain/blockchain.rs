@@ -47,14 +47,17 @@ impl Blockchain {
     }
 
     pub fn add_block(&mut self, transaction: Transaction) {
-        self.validate_chain();
-        let prev_block = &self.blocks[self.blocks.len() - 1];
-        let new_block = Block::new(
-            prev_block.id + 1,
-            prev_block.clone().block_hash,
-            transaction,
-        );
-        self.blocks.push(new_block);
+        if self.validate_chain() == true {
+            let prev_block = &self.blocks[self.blocks.len() - 1];
+            let new_block = Block::new(
+                prev_block.id + 1,
+                prev_block.clone().block_hash,
+                transaction,
+            );
+            self.blocks.push(new_block);
+        } else {
+            return
+        }
     }
 
     pub fn validate_block(&self, block: &Block, previous_block: &Block) -> bool {
@@ -68,16 +71,17 @@ impl Blockchain {
         }
     }
 
-    pub fn validate_chain(&self) {
+    pub fn validate_chain(&self) -> bool {
         for i in 1..self.blocks.len() {
             let block = &self.blocks[i];
             let prev_block = &self.blocks[i - 1].clone();
             if self.validate_block(block, prev_block) == false {
-                println!("block bad");
-                return;
+                println!("Blockchain validation failed, aborting transaction.");
+                return false
             }
         }
         println!("Validated All Blocks");
+        return true
     }
 
     pub fn find_block_by_hash(&self, hash: String) -> Block {
