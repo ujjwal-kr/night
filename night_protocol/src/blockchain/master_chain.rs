@@ -108,6 +108,9 @@ impl Master {
 
     pub fn calculate_balance(&self) -> f64 {
         let mut balance: f64 = 0.0;
+        if self.validate_chain() == false {
+            return balance
+        }
         for master_block in &self.master_blocks {
             for block in &master_block.block_data {
                 if block.transaction.sender == "user".to_string() {
