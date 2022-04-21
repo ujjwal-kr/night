@@ -43,3 +43,11 @@ a {
 * {
   box-sizing: border-box;
 }
+
+@media all and (max-width: 800px) {
+  .explore > .container {
+    padding-left: 5%;
+    padding-right: 5%;
+  }
+  
+}
