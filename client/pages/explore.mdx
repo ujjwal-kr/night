@@ -3,6 +3,7 @@ import Image from 'next/image'
 <div className="explore">
 <div className="container">
 # Night Protocol Documentation
+ 
 Hello I'm [ujjwal-kr](https://github.com/ujjwal-kr) and interested in computer science. I'm working on a long term research project related to blockchain and this project exists to help me gain some experience, and also to share my journey so that other people may learn about it and contribute their ideas as well. If you are interested to work with me on my research, hit me up on [epicujjwal@protonmail.com](mailto:epicujjwal@protonmail.com)
 
 Night is a blockchain protocol written in the rust programming language and is created to give people insights about the internal structure of a blockchain and help me with further research into this topic   . To be noted that this is v1 of the project and does not implement the distributed natute of blockchain, and also dosen't have any multiple wallet system. Those features will be availabe soon with v2 and this paper will be updated accordingly.
@@ -42,7 +43,7 @@ As said earlier, this project has got no multiple wallet system. So transactions
 
 ### Validation
 
-Whenever a transaction is made, a validation function is fired to ensure that all the blocks before the arriving blocks are valid. The validation function takes two blocks at onece, and hashes the first block and compares the hash to the `previous_hash` field of the second block. This is done for the entire chain, each time a new block is added. If the validation fails, no new transactions can be performed, and the balance returns 0. It also means that as the number of blocks increases, the time taken for the validation function to run also increases. We have addressed this issue by adding something called a `master` block.
+Whenever a transaction is made, a validation function is fired to ensure that all the blocks before the arriving blocks are valid. The validation function takes two blocks at once, and hashes the first block and compares the hash to the `previous_hash` field of the second block. This is done for the entire chain, each time a new block is added. If the validation fails, no new transactions can be performed, and the balance returns 0. It also means that as the number of blocks increases, the time taken for the validation function to run also increases. We have addressed this issue by adding something called a `master` block.
 
 ### Master Block
 
@@ -57,7 +58,7 @@ Master_chain has all the properties of a normal blockchain, And it makes it easy
 
 ### Improvements
 
-Usage of this chain in production is not practical yet, because it still requires trust of the user who is hosting it. In future, we can make it distributed by using p2p technology and also make multiple wallet system using cryptographic signing. Thanks for reading the paper. If you have any ideas to discuss with me, you can join my [discod server](https://dsc.gg/kekwlabs).
+Usage of this chain in production is not practical yet, because it still requires trust of the user who is hosting it. In future, we can make it distributed by using p2p technology and also make multiple wallet system using cryptographic signing. Thanks for reading the paper. If you have any ideas to discuss with me, you can join my [discord server](https://dsc.gg/kekwlabs).
 
 </div>
 </div>
