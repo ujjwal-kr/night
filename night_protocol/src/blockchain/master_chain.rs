@@ -69,7 +69,6 @@ impl Master {
                 return false
             }
         }
-        println!("Validated All Master Blocks");
         return true
     }
 

@@ -80,7 +80,6 @@ impl Blockchain {
                 return false
             }
         }
-        println!("Validated All Blocks");
         return true
     }
 
