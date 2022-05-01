@@ -15,7 +15,7 @@ const Service = {
         return await axios.get(`${URL}/transactions?page=${page}`).then(data => {
             return data.data
         }).catch(e => {
-            return e
+            alert("something went wrong")
         })
     },
 
@@ -23,7 +23,7 @@ const Service = {
         return await axios.post(`${URL}/gamble?amount=${amount}`).then(data => {
             return data.data
         }).catch(e => {
-            return e
+            alert("something went wrong")
         })
     },
 
@@ -31,7 +31,7 @@ const Service = {
         return await axios.get(`${URL}/countmaster`).then(data => {
             return data.data.master_count
         }).catch(e => {
-            return e
+            alert("something went wrong")
         })
     }
 }
