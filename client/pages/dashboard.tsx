@@ -26,9 +26,9 @@ const GambleForm = ({
   const gamble = async () => {
     if (!isNaN(parseInt(value))) {
       let res: GambleData = await Service.gamble(parseInt(value));
-      if (res.error == "Balance Error") {
+      if (res.error) {
         showNotification({
-          message: "Insufficient Balance",
+          message: "Insufficient Balance or amount too small",
           color: "red",
         });
       } else {
