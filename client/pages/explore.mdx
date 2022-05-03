@@ -47,13 +47,13 @@ Whenever a transaction is made, a validation function is fired to ensure that al
 
 ### Master Block
 
-The master block contains a blockchain. The chain formed by the master block is known as the "master_chain", and whenever the blockchain exeedes 20 blocks, the entire blockchain is validated, compressed and sent to the master_chain, as a master block. And then the blockchain is deleted. This way, one master_chain can hold 20 transactions. `master_chain.rs` has all the methods related to the master_chain.
+The master block contains a blockchain. The chain formed by the master block is known as the "master_chain", and whenever the blockchain exeedes 100 blocks, the entire blockchain is validated, compressed and sent to the master_chain, as a master block. And then the blockchain is deleted. This way, one master_chain can hold 20 transactions. `master_chain.rs` has all the methods related to the master_chain.
 
 <div style={{width: "100%", textAlign: "center"}}> 
     <Image src="/master-chain.png" height={315} width={1080} />
 </div>
 
-Master_chain has all the properties of a normal blockchain, And it makes it easy to validate all the transactions since now instead of validating each transaction, we only need to validate a master_block and the speed of the validation algorithm is increased by 2000% (20 times). The validation function to validate the master_chain is same as the blockchain and works on hash comparison.
+Master_chain has all the properties of a normal blockchain, And it makes it easy to validate all the transactions since now instead of validating each transaction, we only need to validate a master_block and the speed of the validation algorithm is increased by 10000% (100 times). The validation function to validate the master_chain is same as the blockchain and works on hash comparison.
 
 
 ### Improvements
