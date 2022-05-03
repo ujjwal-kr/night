@@ -243,7 +243,7 @@ fn gamble(
             win = false;
         }
 
-        if blocks.blocks.lock().unwrap().blocks.len() == 20 {
+        if blocks.blocks.lock().unwrap().blocks.len() == 100 {
             master_blocks
                 .master_blocks
                 .lock()
