@@ -1,0 +1,12 @@
+{
+    "night": {
+        "folder": "night_protocol",
+        "run": "cargo run",
+        "hooks": ["cargo fmt"]
+    },
+    "client": {
+        "folder": "client",
+        "install": "npm i",
+        "run": "npm run dev"
+    }
+}
