@@ -121,7 +121,7 @@ const TransactionComponent = ({ transactionEvent }: { transactionEvent: number }
           {transactions.map(element => {
             return (
               <tr key={element.id.toString()}>
-                <td>{element.block_hash.substring(0, 8)}</td>
+                <td>{element.block_hash.substring(0, 8).toLocaleUpperCase()}</td>
                 <td>{element.transaction.sender}</td>
                 <td>{element.transaction.reciever}</td>
                 <td>${element.transaction.amount.toString()}</td>
